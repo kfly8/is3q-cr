@@ -8,3 +8,7 @@ shards:
     github: spalger/crystal-mime
     commit: bb69613b93dd059f68d1b508a31f83ca6c8eaace
 
+  mysql:
+    github: waterlink/crystal-mysql
+    commit: b9ce70bc9b45021b2992221b63a1da1b9e7d30a4
+
