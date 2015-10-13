@@ -3,7 +3,7 @@ require "amethyst"
 class WorldController < Base::Controller
   actions :hello
 
-  view "hello", "#{__DIR__}/../views"
+  view "hello", "#{__DIR__}/views"
   def hello
     @name = "World"
     respond_to do |format|
