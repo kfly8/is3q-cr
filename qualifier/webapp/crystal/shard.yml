@@ -4,4 +4,9 @@ version: 0.1.0
 authors:
   - Kenta, Kobayashi <kentafly88@gmail.com>
 
+dependencies:
+  amethyst:
+    github: Codcore/Amethyst
+    branch: master
+
 license: MIT

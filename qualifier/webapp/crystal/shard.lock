@@ -1,0 +1,10 @@
+version: 1.0
+shards:
+  amethyst:
+    github: Codcore/Amethyst
+    commit: ad53218cf362e46b3236c68ffb08fc6840404962
+
+  mime:
+    github: spalger/crystal-mime
+    commit: bb69613b93dd059f68d1b508a31f83ca6c8eaace
+
