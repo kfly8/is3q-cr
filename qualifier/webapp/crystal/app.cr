@@ -28,9 +28,10 @@ class Isucon3Controller < Base::Controller
   end
 
   def connection
+    return $mysql if $mysql
     conf = setting
 
-    MySQL.connect(
+    $mysql = MySQL.connect(
       conf.database.host,
       conf.database.username,
       conf.database.password,
@@ -42,7 +43,7 @@ class Isucon3Controller < Base::Controller
 
   view "hello", "#{__DIR__}/views"
   def index
-    mysql = connection
+    mysql = connection.not_nil!
     ret = mysql.query("SELECT RAND()")
 
     @name = ret
