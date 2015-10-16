@@ -1,7 +1,21 @@
 require "amethyst"
 
-class WorldController < Base::Controller
-  actions :hello
+class Config
+  json_mapping({
+    database: { type: DatabaseConfig }
+  })
+end
+
+class DatabaseConfig
+  json_mapping({
+    dbname: String
+    host:   String
+    port:   Int32
+    username: String
+    password: String
+  })
+end
+
 
   view "hello", "#{__DIR__}/views"
   def hello
