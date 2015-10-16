@@ -18,21 +18,19 @@ end
 
 
   view "hello", "#{__DIR__}/views"
-  def hello
-    @name = "World"
+  def index
     respond_to do |format|
       format.html { render "hello" }
     end
   end
 end
 
-class HelloWorldApp < Base::App
+class Isucon3App < Base::App
   routes.draw do
-    all "/",      "world#hello"
-    get "/hello", "world#hello"
-    register WorldController
+    get "/",      "isucon3#index"
+    register Isucon3Controller
   end
 end
 
-app = HelloWorldApp.new
+app = Isucon3App.new
 app.serve
