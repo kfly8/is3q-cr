@@ -18,6 +18,30 @@ class DatabaseConfig
   })
 end
 
+alias MySQLRowType =  Nil | String | Int32 | Int64 | Float64 | Bool | Time | MySQL::Types::Date
+
+class MySQLResultInflator
+
+  def initialize(@columns)
+  end
+
+  def to_rows(result : Array(Array(MySQLRowType))?)
+    result.not_nil!.map { |v| to_row(v) }
+  end
+
+  def to_row(row_data : Array(MySQLRowType))
+    row = {} of Symbol => MySQLRowType
+    @columns.each_index do |index|
+      col = @columns[index]
+      val = row_data[index]
+      row[col] = val
+    end
+    return row
+  end
+end
+
+
+
 class Isucon3Controller < Base::Controller
   actions :index
 
@@ -45,8 +69,10 @@ class Isucon3Controller < Base::Controller
   def index
     mysql = connection.not_nil!
     ret = mysql.query("SELECT RAND()")
+    mret = MySQLResultInflator.new([:rand])
+    rows = mret.to_rows(ret)
 
-    @name = ret
+    @name = rows[0]? ? rows[0][:rand] : ""
     respond_to do |format|
       format.html { render "hello" }
     end
