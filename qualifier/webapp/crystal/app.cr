@@ -77,7 +77,7 @@ class Isucon3Controller < Base::Controller
     if user_id
       ret   = mysql.query("SELECT * FROM users WHERE id=%d" % user_id)
       users = $users.to_rows(ret)
-      return users.first
+      return users.first if users.first?
     end
   end
 
