@@ -30,7 +30,7 @@ class MySQLResultInflator
   end
 
   def to_row(row_data : Array(MySQLRowType))
-    row = {} of Symbol => MySQLRowType
+    row = {} of String => MySQLRowType
     @columns.each_index do |index|
       col = @columns[index]
       val = row_data[index]
@@ -40,6 +40,11 @@ class MySQLResultInflator
   end
 end
 
+SCHEMA = {
+  :users => ["id", "username", "password", "salt", "last_access"],
+}
+
+$users = MySQLResultInflator.new(SCHEMA[:users])
 
 
 class Isucon3Controller < Base::Controller
@@ -65,14 +70,29 @@ class Isucon3Controller < Base::Controller
     )
   end
 
+  def get_user
+    mysql = connection.not_nil!
+#    user_id = session["user_id"]
+    user_id = 1 # TODO:
+    if user_id
+      ret   = mysql.query("SELECT * FROM users WHERE id=%d" % user_id)
+      users = $users.to_rows(ret)
+      return users.first
+    end
+  end
+
+
   view "hello", "#{__DIR__}/views"
   def index
     mysql = connection.not_nil!
     ret = mysql.query("SELECT RAND()")
-    mret = MySQLResultInflator.new([:rand])
+    mret = MySQLResultInflator.new(["rand"])
     rows = mret.to_rows(ret)
 
-    @name = rows[0]? ? rows[0][:rand] : ""
+    user = get_user
+    puts user
+
+    @name = rows[0]? ? rows[0]["rand"] : ""
     respond_to do |format|
       format.html { render "hello" }
     end
