@@ -48,7 +48,7 @@ $users = MySQLResultInflator.new(SCHEMA[:users])
 
 
 class Isucon3Controller < Base::Controller
-  actions :index
+  actions :index, :signin
 
   def setting
     path   = File.dirname(__FILE__) + "/../config/#{ ENV["ISUCON_ENV"]? || "local" }.json"
@@ -97,11 +97,21 @@ class Isucon3Controller < Base::Controller
       format.html { render "hello" }
     end
   end
+
+  view "signin", "#{__DIR__}/views"
+  def signin
+    user = get_user
+    @user = user
+    respond_to do |format|
+      format.html { render "signin" }
+    end
+  end
 end
 
 class Isucon3App < Base::App
   routes.draw do
-    get "/",      "isucon3#index"
+    get "/",       "isucon3#index"
+    get "/signin", "isucon3#signin"
     register Isucon3Controller
   end
 end
