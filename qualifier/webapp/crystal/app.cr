@@ -48,7 +48,7 @@ $users = MySQLResultInflator.new(SCHEMA[:users])
 
 
 class Isucon3Controller < Base::Controller
-  actions :index, :signin
+  actions :index, :signin, :post_signin
 
   def setting
     path   = File.dirname(__FILE__) + "/../config/#{ ENV["ISUCON_ENV"]? || "local" }.json"
@@ -106,12 +106,39 @@ class Isucon3Controller < Base::Controller
       format.html { render "signin" }
     end
   end
+
+  def post_signin
+    mysql = connection.not_nil!
+
+    username = params[:username] as String
+    password = params[:password] as String
+    ret = mysql.query("SELECT id, username, password, salt FROM users WHERE username='%s'" % username)
+
+    users = $users.to_rows(ret)
+    user  = users.first if users.first?
+
+    puts user
+
+#    if user && user["password"] == Digest::SHA256.hexdigest(user["salt"] + password)
+    if true
+      #session.clear
+      #session["user_id"] = user["id"]
+      #session["token"] = Digest::SHA256.hexdigest(Random.new.rand.to_s)
+#      mysql.query("UPDATE users SET last_access=now() WHERE id=%d" % user["id"])
+      redirect_to "/"
+#    else
+#      respond_to do |format|
+#        format.html { render "signin" }
+#      end
+    end
+  end
 end
 
 class Isucon3App < Base::App
   routes.draw do
     get "/",       "isucon3#index"
     get "/signin", "isucon3#signin"
+    post "/signin", "isucon3#post_signin"
     register Isucon3Controller
   end
 end
